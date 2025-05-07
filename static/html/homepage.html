@@ -2,20 +2,59 @@
 <html>
     <head>
         <title>Music Player</title>
-
         <meta charset="UTF-8" />
         <meta
             http-equiv="Content-Security-Policy"
-            content="default-src 'self'; script-src 'self'"
+            content="default-src 'self'; script-src 'self'; img-src 'self' data:;"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
         <link rel="stylesheet" href="../css/normalize.css" />
         <link rel="stylesheet" href="../css/homepage.css" />
-
         <script src="../../build/src/renderers/homepage.js" defer></script>
     </head>
     <body>
-        oi
+        <div class="container">
+            <aside class="sidebar">
+                <h1>MP3 Player</h1>
+                <nav>
+                    <ul>
+                        <li><a href="#">Library</a></li>
+                        <li><a href="#">Now Playing</a></li>
+                        <li><a href="#">Playlists</a></li>
+                        <li><a href="#">Settings</a></li>
+                    </ul>
+                </nav>
+            </aside>
+            <main class="main">
+                <h2>All Songs</h2>
+                <button id="select-folder">Select Folder</button>
+                <ul id="song-list"></ul>
+            </main>
+        </div>
+        <div class="audio-controller">
+            <div class="progress-section">
+                <span id="current-time">00:00</span>
+                <input id="progress-bar" type="range" min="0" max="100" value="0" />
+                <span id="total-time">00:00</span>
+            </div>
+            <div class="controls-section">
+                <div class="song-meta">
+                    <img id="song-image" src="../images/default.png" alt="Cover" />
+                    <span id="current-song">No song selected</span>
+                </div>
+                <div class="player-controls">
+                    <div class="buttons">
+                        <button id="prev-button">⏮️</button>
+                        <button id="play-button">▶️</button>
+                        <button id="pause-button" class="hidden">⏸️</button>
+                        <button id="next-button">⏭️</button>
+                    </div>
+                </div>
+                <div class="audio-settings">
+                    <button id="mute-button">🔊</button>
+                    <input id="volume-bar" type="range" min="0" max="100" value="100" />
+                </div>
+            </div>
+        </div>
     </body>
 </html>

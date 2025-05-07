@@ -1,6 +1,9 @@
+import fs from 'fs';
 import path from 'path';
+import { pathToFileURL } from 'url';
 
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import { parseFile } from 'music-metadata';
 
 let mainWindow: BrowserWindow;
 
@@ -26,6 +29,52 @@ const createMainWindow = () => {
 
     loadHomepage();
 };
+
+ipcMain.handle('select-folder', async () => {
+    const result = await dialog.showOpenDialog({
+        properties: ['openDirectory'],
+    });
+
+    if (result.canceled || result.filePaths.length === 0) {
+        return [];
+    }
+
+    const folderPath = result.filePaths[0];
+
+    const files = fs
+        .readdirSync(folderPath)
+        .filter((file) => file.toLowerCase().endsWith('.mp3'))
+        .map((file) => ({
+            name: file,
+            path: path.join(folderPath, file),
+        }));
+
+    return files;
+});
+
+ipcMain.handle('get-song-info', async (event, filePath: string) => {
+    const fileUrl = pathToFileURL(filePath).href;
+
+    try {
+        const metadata = await parseFile(filePath);
+        const picture = metadata.common.picture?.[0];
+
+        let coverDataUrl = null;
+
+        if (picture) {
+            const base64 = Buffer.from(picture.data).toString('base64');
+            coverDataUrl = `data:${picture.format};base64,${base64}`;
+        }
+
+        return {
+            url: fileUrl,
+            cover: coverDataUrl,
+        };
+    } catch (error) {
+        console.trace(error);
+        return { url: fileUrl, cover: null };
+    }
+});
 
 app.whenReady().then(() => {
     createMainWindow();
