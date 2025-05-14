@@ -49,6 +49,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         playButton.classList.add('hidden');
         pauseButton.classList.remove('hidden');
+
+        localStorage.setItem('selectedSongIndex', songIndex.toString());
     };
 
     const pauseSong = () => {
@@ -81,9 +83,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const loadSongs = (files: { name: string; path: string }[]) => {
         songs = files;
-        songIndex = 0;
 
         updateSongInfo(songs[songIndex]?.name);
+
+        localStorage.setItem('selectedSongIndex', songIndex.toString());
     };
 
     const renderSongList = (files: { name: string; path: string }[]) => {
@@ -169,6 +172,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         updateSongInfo(songs[songIndex]?.name);
         playSong();
+
+        localStorage.setItem('selectedSongIndex', songIndex.toString());
     });
 
     nextButton.addEventListener('click', () => {
@@ -176,6 +181,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         updateSongInfo(songs[songIndex]?.name);
         playSong();
+
+        localStorage.setItem('selectedSongIndex', songIndex.toString());
     });
 
     selectFolderButton.addEventListener('click', async () => {
@@ -191,8 +198,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (savedSongs) {
         const parsedSongs = JSON.parse(savedSongs) as { name: string; path: string }[];
+        const savedIndex = parseInt(localStorage.getItem('selectedSongIndex') || '0', 10);
+
+        if (!isNaN(savedIndex) && parsedSongs[savedIndex]) {
+            songIndex = savedIndex;
+        }
+
         renderSongList(parsedSongs);
         loadSongs(parsedSongs);
+        updateSongInfo(parsedSongs[savedIndex].name);
     }
 
     setVolume(initialVolume);
