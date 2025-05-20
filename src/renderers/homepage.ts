@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const totalTime = document.getElementById('total-time') as HTMLSpanElement;
     const volumeBar = document.getElementById('volume-bar') as HTMLInputElement;
     const muteButton = document.getElementById('mute-button')!;
+    const volumeIcon = document.getElementById('volume-icon');
     const volumeValue = document.getElementById('volume-value') as HTMLSpanElement;
     const prevButton = document.getElementById('prev-button')!;
     const nextButton = document.getElementById('next-button')!;
@@ -81,6 +82,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         localStorage.setItem('volume', volume.toString());
     };
 
+    const updateVolumeIcon = () => {
+        if (!volumeIcon) return;
+
+        if (audio.muted || audio.volume === 0) {
+            volumeIcon.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                    <line x1="18" y1="9" x2="22" y2="13" />
+                    <line x1="22" y1="9" x2="18" y2="13" />
+                </svg>
+            `;
+        } else {
+            volumeIcon.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                </svg>
+            `;
+        }
+    };
+
     const loadSongs = (files: { name: string; path: string }[]) => {
         songs = files;
 
@@ -126,10 +149,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     audio.addEventListener('timeupdate', () => {
         const progressPercent = (audio.currentTime / audio.duration) * 100 || 0;
 
-        if (progressPercent === 100) {
-            nextButton.click();
-        }
-
         currentTime.textContent = formatTime(audio.currentTime);
         progressBar.value = ((audio.currentTime / audio.duration) * 100 || 0).toString();
 
@@ -138,6 +157,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     audio.addEventListener('loadedmetadata', () => {
         totalTime.textContent = formatTime(audio.duration);
+    });
+
+    audio.addEventListener('ended', () => {
+        nextButton.click();
     });
 
     progressBar.addEventListener('input', () => {
@@ -152,19 +175,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (audio.muted && volume > 0) {
             audio.muted = false;
             isMuted = false;
-            muteButton.innerText = '🔊';
         }
 
         setVolume(volume);
+        updateVolumeIcon();
 
         volumeBar.style.setProperty('--progress', `${volumePercent}%`);
-        muteButton.innerText = audio.volume === 0 ? '🔇' : '🔊';
     });
 
     muteButton.addEventListener('click', () => {
         isMuted = !isMuted;
         audio.muted = isMuted;
-        muteButton.innerText = isMuted ? '🔇' : '🔊';
+
+        updateVolumeIcon();
     });
 
     prevButton.addEventListener('click', () => {
@@ -172,8 +195,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         updateSongInfo(songs[songIndex]?.name);
         playSong();
-
-        localStorage.setItem('selectedSongIndex', songIndex.toString());
     });
 
     nextButton.addEventListener('click', () => {
@@ -181,8 +202,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         updateSongInfo(songs[songIndex]?.name);
         playSong();
-
-        localStorage.setItem('selectedSongIndex', songIndex.toString());
     });
 
     selectFolderButton.addEventListener('click', async () => {
@@ -210,5 +229,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     setVolume(initialVolume);
+    updateVolumeIcon();
+
     volumeBar.style.setProperty('--progress', `${initialVolume}%`);
 });

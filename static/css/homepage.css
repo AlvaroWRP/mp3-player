@@ -6,10 +6,21 @@
 
 body {
     font-family: Arial, sans-serif;
-    background: #1c1c1c;
+    background: #1a1a1f;
     color: #fff;
     display: flex;
     height: 100vh;
+}
+
+button svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+    transition: fill 0.2s ease;
+}
+
+button:hover svg {
+    fill: #8e6ec4;
 }
 
 .hidden {
@@ -23,7 +34,7 @@ body {
 
 .sidebar {
     width: 240px;
-    background: #2b2b2b;
+    background: #151318;
     padding: 20px;
     flex-shrink: 0;
 }
@@ -43,12 +54,12 @@ body {
 
 .sidebar a {
     text-decoration: none;
-    color: #ccc;
+    color: #bbb;
     transition: color 0.2s ease;
 }
 
 .sidebar a:hover {
-    color: #fff;
+    color: #8e6ec4;
 }
 
 .main {
@@ -59,6 +70,43 @@ body {
 
 .main h2 {
     margin-bottom: 20px;
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.folder-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    background-color: #2a2633;
+    border: 1px solid #444;
+    color: #e0e0e0;
+    padding: 4px 10px;
+    border-radius: 4px;
+    height: 100%;
+    line-height: 1;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.folder-button:hover {
+    background-color: #3a2f4f;
+    border-color: #6a4fb3;
+    color: #fff;
+}
+
+.folder-button svg {
+    fill: currentColor;
+    width: 18px;
+    height: 18px;
 }
 
 #song-list {
@@ -204,6 +252,10 @@ body {
     transition: color 0.2s ease;
 }
 
+.player-controls button svg {
+    margin-top: 5px;
+}
+
 .player-controls button:hover {
     color: #00bcd4;
 }
@@ -225,8 +277,12 @@ body {
     transition: color 0.2s ease;
 }
 
+.audio-settings button svg {
+    margin-top: 5px;
+}
+
 .audio-settings button:hover {
-    color: #00bcd4;
+    color: #8e6ec4;
 }
 
 .audio-settings input[type='range'] {
@@ -290,13 +346,13 @@ input[type='range'] {
 input[type='range']::-webkit-slider-runnable-track {
     height: 6px;
     border-radius: 5px;
-    background: linear-gradient(to right, #4caf50 var(--progress, 0%), #ddd var(--progress, 0%));
+    background: linear-gradient(to right, #8e6ec4 var(--progress, 0%), #444 var(--progress, 0%));
 }
 
 input[type='range']::-moz-range-track {
     height: 6px;
     border-radius: 5px;
-    background: linear-gradient(to right, #4caf50 var(--progress, 0%), #ddd var(--progress, 0%));
+    background: linear-gradient(to right, #8e6ec4 var(--progress, 0%), #444 var(--progress, 0%));
 }
 
 input[type='range']::-webkit-slider-thumb {
@@ -305,7 +361,7 @@ input[type='range']::-webkit-slider-thumb {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: #4caf50;
+    background: #8e6ec4;
     cursor: pointer;
     margin-top: -3px;
     transition: background 0.3s;
@@ -315,6 +371,6 @@ input[type='range']::-moz-range-thumb {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: #4caf50;
+    background: #8e6ec4;
     cursor: pointer;
 }
