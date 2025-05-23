@@ -158,6 +158,14 @@ button:hover svg {
     cursor: pointer;
 }
 
+.letter-separator {
+    font-weight: bold;
+    font-size: 1.1em;
+    padding: 10px 0 4px;
+    border-bottom: 1px solid #333;
+    margin-top: 20px;
+}
+
 .audio-controller {
     display: flex;
     flex-direction: column;

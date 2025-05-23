@@ -115,27 +115,49 @@ document.addEventListener('DOMContentLoaded', async () => {
     const renderSongList = (files: { name: string; path: string }[]) => {
         songList.innerHTML = '';
 
-        files.forEach((file) => {
-            const li = document.createElement('li');
+        const sortedFiles = [...files].sort((a, b) =>
+            a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }),
+        );
 
-            li.innerHTML = `
-            <div class="song-item">
-                <strong>${file.name.replace('.mp3', '')}</strong><br>
-                <small>${file.path}</small>
-            </div>
-            `;
+        const grouped: Record<string, { name: string; path: string }[]> = {};
 
-            li.addEventListener('click', async () => {
-                const clickedIndex = songs.findIndex((s) => s.path === file.path);
+        for (const file of sortedFiles) {
+            const firstChar = file.name[0].toUpperCase();
+            const key = /^[A-Z]$/.test(firstChar) ? firstChar : '#';
 
-                if (clickedIndex !== -1) {
-                    songIndex = clickedIndex;
-                    await playSong();
-                }
-            });
+            if (!grouped[key]) grouped[key] = [];
+            grouped[key].push(file);
+        }
 
-            songList.appendChild(li);
-        });
+        for (const key of Object.keys(grouped).sort()) {
+            const separator = document.createElement('li');
+
+            separator.className = 'letter-separator';
+            separator.textContent = key;
+            songList.appendChild(separator);
+
+            for (const file of grouped[key]) {
+                const li = document.createElement('li');
+
+                li.innerHTML = `
+                <div class="song-item">
+                    <strong>${file.name.replace('.mp3', '')}</strong><br />
+                    <small>${file.path}</small>
+                </div>
+                `;
+
+                li.addEventListener('click', async () => {
+                    const clickedIndex = songs.findIndex((s) => s.path === file.path);
+
+                    if (clickedIndex !== -1) {
+                        songIndex = clickedIndex;
+                        await playSong();
+                    }
+                });
+
+                songList.appendChild(li);
+            }
+        }
     };
 
     playButton.addEventListener('click', () => {
@@ -150,7 +172,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const progressPercent = (audio.currentTime / audio.duration) * 100 || 0;
 
         currentTime.textContent = formatTime(audio.currentTime);
-        progressBar.value = ((audio.currentTime / audio.duration) * 100 || 0).toString();
+        progressBar.value = progressPercent.toString();
 
         progressBar.style.setProperty('--progress', `${progressPercent}%`);
     });
@@ -191,6 +213,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     prevButton.addEventListener('click', () => {
+        if (!songs.length) return;
+
         songIndex = (songIndex - 1 + songs.length) % songs.length;
 
         updateSongInfo(songs[songIndex]?.name);
@@ -198,6 +222,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     nextButton.addEventListener('click', () => {
+        if (!songs.length) return;
+
         songIndex = (songIndex + 1) % songs.length;
 
         updateSongInfo(songs[songIndex]?.name);
@@ -211,8 +237,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             localStorage.setItem('songs', JSON.stringify(files));
         }
 
-        renderSongList(files);
-        loadSongs(files);
+        const sortedFiles = [...files].sort((a, b) =>
+            a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }),
+        );
+
+        renderSongList(sortedFiles);
+        loadSongs(sortedFiles);
     });
 
     if (savedSongs) {
@@ -223,9 +253,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             songIndex = savedIndex;
         }
 
-        renderSongList(parsedSongs);
-        loadSongs(parsedSongs);
-        updateSongInfo(parsedSongs[savedIndex].name);
+        const sortedParsedSongs = [...parsedSongs].sort((a, b) =>
+            a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }),
+        );
+
+        renderSongList(sortedParsedSongs);
+        loadSongs(sortedParsedSongs);
+        updateSongInfo(sortedParsedSongs[savedIndex].name);
     }
 
     setVolume(initialVolume);
