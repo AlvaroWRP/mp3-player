@@ -27,6 +27,11 @@ button:hover svg {
     display: none;
 }
 
+.button-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
 .layout {
     display: flex;
     flex-direction: column;
@@ -87,7 +92,7 @@ button:hover svg {
     align-items: center;
 }
 
-.folder-button {
+.main-buttons {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -106,25 +111,27 @@ button:hover svg {
         color 0.2s ease;
 }
 
-.folder-button:hover {
+.main-buttons:hover {
     background-color: #3a2f4f;
     border-color: #6a4fb3;
     color: #fff;
 }
 
-.folder-button svg {
+.main-buttons svg {
     fill: currentColor;
     width: 18px;
     height: 18px;
 }
 
-#song-list {
+#song-list,
+#shuffled-list {
     list-style: none;
     padding: 0;
     margin: 20px 0;
 }
 
-#song-list li {
+#song-list li,
+#shuffled-list li {
     background: #2a2a2a;
     border-radius: 8px;
     padding: 12px 16px;
@@ -136,7 +143,8 @@ button:hover svg {
     transition: background 0.2s ease;
 }
 
-#song-list li:hover {
+#song-list li:hover,
+#shuffled-list li:hover {
     background: #3a3a3a;
 }
 

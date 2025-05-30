@@ -13,14 +13,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     const nextButton = document.getElementById('next-button')!;
     const selectFolderButton = document.getElementById('select-folder')!;
     const songList = document.getElementById('song-list')!;
+    const shuffleButton = document.getElementById('shuffle-button')!;
+    const shuffledList = document.getElementById('shuffled-list')!;
+    const libraryTab = document.getElementById('library-tab')!;
+    const shuffledTab = document.getElementById('shuffled-tab')!;
+    const tabTitle = document.getElementById('tab-title')!;
+
     const savedVolume = localStorage.getItem('volume');
     const savedSongs = localStorage.getItem('songs');
+    const savedShuffledSongs = localStorage.getItem('shuffled-songs');
+    const activeTab = localStorage.getItem('activeTab');
+
     const audio = new Audio();
 
     const initialVolume = savedVolume !== null ? parseInt(savedVolume, 10) : 100;
 
     let songIndex = 0;
     let songs: { name: string; path: string }[] = [];
+
+    let shuffledSongs: { name: string; path: string }[] = [];
+    let shuffledIndex = 0;
+
+    let isUsingShuffle = false;
     let isMuted = false;
 
     const updateSongInfo = (songName: string) => {
@@ -28,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const playSong = async () => {
-        const song = songs[songIndex];
+        const song = isUsingShuffle ? shuffledSongs[shuffledIndex] : songs[songIndex];
 
         if (!song) return;
 
@@ -51,7 +65,56 @@ document.addEventListener('DOMContentLoaded', async () => {
         playButton.classList.add('hidden');
         pauseButton.classList.remove('hidden');
 
+        songIndex = songs.findIndex((s) => s.path === song.path);
         localStorage.setItem('selectedSongIndex', songIndex.toString());
+
+        if (isUsingShuffle) {
+            localStorage.setItem('shuffledSongIndex', shuffledIndex.toString());
+        }
+    };
+
+    const shuffleArray = <T>(array: T[]): T[] => {
+        const copy = [...array];
+
+        for (let i = copy.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+
+            [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+
+        return copy;
+    };
+
+    const renderShuffledList = () => {
+        shuffledSongs = shuffleArray(songs);
+        shuffledIndex = 0;
+        isUsingShuffle = true;
+
+        shuffledList.innerHTML = '';
+
+        for (const [i, song] of shuffledSongs.entries()) {
+            const li = document.createElement('li');
+
+            li.classList.add('song');
+
+            li.innerHTML = `
+                <div class="song-item">
+                    <strong>${song.name.replace('.mp3', '')}</strong><br />
+                    <small>${song.path}</small>
+                </div>
+            `;
+
+            li.addEventListener('click', async () => {
+                shuffledIndex = i;
+                songIndex = songs.findIndex((s) => s.path === song.path);
+
+                await playSong();
+            });
+
+            shuffledList.appendChild(li);
+        }
+
+        localStorage.setItem('shuffledSongs', JSON.stringify(shuffledSongs));
     };
 
     const pauseSong = () => {
@@ -168,6 +231,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         pauseSong();
     });
 
+    shuffleButton.addEventListener('click', () => {
+        renderShuffledList();
+    });
+
     audio.addEventListener('timeupdate', () => {
         const progressPercent = (audio.currentTime / audio.duration) * 100 || 0;
 
@@ -215,19 +282,47 @@ document.addEventListener('DOMContentLoaded', async () => {
     prevButton.addEventListener('click', () => {
         if (!songs.length) return;
 
-        songIndex = (songIndex - 1 + songs.length) % songs.length;
-
-        updateSongInfo(songs[songIndex]?.name);
-        playSong();
+        if (isUsingShuffle) {
+            shuffledIndex = (shuffledIndex - 1 + shuffledSongs.length) % shuffledSongs.length;
+            playSong();
+        } else {
+            songIndex = (songIndex - 1 + songs.length) % songs.length;
+            playSong();
+        }
     });
 
     nextButton.addEventListener('click', () => {
         if (!songs.length) return;
 
-        songIndex = (songIndex + 1) % songs.length;
+        if (isUsingShuffle) {
+            shuffledIndex = (shuffledIndex + 1) % shuffledSongs.length;
+            playSong();
+        } else {
+            songIndex = (songIndex + 1) % songs.length;
+            playSong();
+        }
+    });
 
-        updateSongInfo(songs[songIndex]?.name);
-        playSong();
+    libraryTab.addEventListener('click', () => {
+        isUsingShuffle = false;
+
+        localStorage.setItem('activeTab', 'library');
+
+        songList.style.display = 'block';
+        shuffledList.style.display = 'none';
+
+        tabTitle.textContent = 'Library';
+    });
+
+    shuffledTab.addEventListener('click', () => {
+        isUsingShuffle = true;
+
+        localStorage.setItem('activeTab', 'shuffle');
+
+        songList.style.display = 'none';
+        shuffledList.style.display = 'block';
+
+        tabTitle.textContent = 'Shuffled';
     });
 
     selectFolderButton.addEventListener('click', async () => {
@@ -260,6 +355,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderSongList(sortedParsedSongs);
         loadSongs(sortedParsedSongs);
         updateSongInfo(sortedParsedSongs[savedIndex].name);
+    }
+
+    if (savedShuffledSongs) {
+        const parsedShuffledSongs = JSON.parse(savedShuffledSongs) as {
+            name: string;
+            path: string;
+        }[];
+        const savedShuffledIndex = parseInt(localStorage.getItem('shuffledSongIndex') || '0', 10);
+
+        if (!isNaN(savedShuffledIndex) && parsedShuffledSongs[savedShuffledIndex]) {
+            shuffledIndex = savedShuffledIndex;
+        }
+    }
+
+    if (activeTab === 'shuffle') {
+        isUsingShuffle = true;
+
+        shuffledTab.click();
+
+        renderShuffledList();
+    } else {
+        libraryTab.click();
     }
 
     setVolume(initialVolume);
