@@ -12,6 +12,14 @@ body {
     height: 100vh;
 }
 
+title::selection,
+h1::selection,
+ul::selection,
+span::selection,
+img::selection {
+    background: transparent;
+}
+
 button svg {
     width: 24px;
     height: 24px;

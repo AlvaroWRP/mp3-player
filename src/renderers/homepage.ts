@@ -1,3 +1,7 @@
+document.addEventListener('dragstart', (event) => {
+    event.preventDefault();
+});
+
 document.addEventListener('DOMContentLoaded', async () => {
     const currentSongLabel = document.getElementById('current-song')!;
     const playButton = document.getElementById('play-button')!;
@@ -233,6 +237,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     shuffleButton.addEventListener('click', () => {
         renderShuffledList();
+        shuffledTab.click();
     });
 
     audio.addEventListener('timeupdate', () => {
@@ -371,8 +376,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (activeTab === 'shuffle') {
         isUsingShuffle = true;
-
-        shuffledTab.click();
 
         renderShuffledList();
     } else {
