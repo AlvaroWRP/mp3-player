@@ -1,12 +1,12 @@
 {
-    "name": "songs-player",
+    "name": "music-player",
     "version": "1.0.0",
-    "main": "build/src/main.js",
+    "main": "build/electron/main.js",
     "scripts": {
         "prettier": "npx prettier . --write",
-        "sort": "npx eslint . --ext .ts,.js --fix",
+        "sort": "npx eslint . --ext .ts,.tsx,.js,.jsx --fix",
         "clean": "rimraf build",
-        "build": "npm run clean && tsc",
+        "build": "npm run clean && tsc -b",
         "dev": "npm run build && electron ."
     },
     "keywords": [],
@@ -14,21 +14,21 @@
     "license": "ISC",
     "description": "",
     "devDependencies": {
-        "@eslint/js": "^9.26.0",
-        "@types/node": "^22.15.3",
-        "@typescript-eslint/parser": "^8.32.0",
-        "electron": "^36.1.0",
-        "eslint": "^9.26.0",
-        "eslint-config-prettier": "^10.1.2",
-        "eslint-plugin-import": "^2.31.0",
-        "eslint-plugin-prettier": "^5.4.0",
-        "globals": "^16.0.0",
-        "prettier": "^3.5.3",
-        "rimraf": "^6.0.1",
-        "typescript": "^5.8.3",
-        "typescript-eslint": "^8.31.1"
+        "@eslint/js": "^9.39.2",
+        "@types/node": "^25.0.7",
+        "@typescript-eslint/parser": "^8.53.0",
+        "electron": "^39.2.7",
+        "eslint": "^9.39.2",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-import": "^2.32.0",
+        "eslint-plugin-prettier": "^5.5.4",
+        "globals": "^17.0.0",
+        "prettier": "^3.7.4",
+        "rimraf": "^6.1.2",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.53.0"
     },
     "dependencies": {
-        "music-metadata": "^11.2.1"
+        "music-metadata": "^11.10.5"
     }
 }

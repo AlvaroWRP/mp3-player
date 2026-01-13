@@ -1,21 +1,29 @@
 import fs from 'fs';
 import path from 'path';
-import { pathToFileURL } from 'url';
 
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import { parseFile } from 'music-metadata';
 
+const appRoot = path.resolve(__dirname, '../../../');
+
 let mainWindow: BrowserWindow;
 
-function loadHomepage() {
-    mainWindow.loadFile(path.join(__dirname, '../../static/html/homepage.html'));
+function loadIndex() {
+    const isDev = !app.isPackaged;
+
+    if (isDev) {
+        mainWindow.loadURL('http://localhost:5173');
+        mainWindow.webContents.openDevTools();
+    } else {
+        mainWindow.loadFile(path.join(app.getAppPath(), 'renderer/dist/index.html'));
+    }
 }
 
 const createMainWindow = () => {
     mainWindow = new BrowserWindow({
         width: 1920,
         height: 1080,
-        icon: path.join(__dirname, '../../static/images/icon.ico'),
+        icon: path.join(__dirname, appRoot, 'assets/images/icon.ico'),
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
         },
@@ -23,11 +31,7 @@ const createMainWindow = () => {
 
     mainWindow.menuBarVisible = false;
 
-    if (process.env.NODE_ENV !== 'production') {
-        mainWindow.webContents.openDevTools();
-    }
-
-    loadHomepage();
+    loadIndex();
 };
 
 ipcMain.handle('select-folder', async () => {
@@ -52,14 +56,13 @@ ipcMain.handle('select-folder', async () => {
     return files;
 });
 
-ipcMain.handle('get-song-info', async (event, filePath: string) => {
-    const fileUrl = pathToFileURL(filePath).href;
-
+ipcMain.handle('get-song-info', async (_, filePath: string) => {
     try {
+        const buffer = await fs.promises.readFile(filePath);
         const metadata = await parseFile(filePath);
         const picture = metadata.common.picture?.[0];
 
-        let coverDataUrl = null;
+        let coverDataUrl: string | null = null;
 
         if (picture) {
             const base64 = Buffer.from(picture.data).toString('base64');
@@ -67,12 +70,13 @@ ipcMain.handle('get-song-info', async (event, filePath: string) => {
         }
 
         return {
-            url: fileUrl,
+            buffer,
+            mime: 'audio/mpeg',
             cover: coverDataUrl,
         };
     } catch (error) {
         console.trace(error);
-        return { url: fileUrl, cover: null };
+        return null;
     }
 });
 
