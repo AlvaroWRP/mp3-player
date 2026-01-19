@@ -7,7 +7,7 @@
         "preview": "vite preview",
         "lint": "eslint .",
         "build": "tsc -b && vite build",
-        "dev": "vite"
+        "dev": "npm run build && vite"
     },
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^7.1.0",

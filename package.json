@@ -1,5 +1,5 @@
 {
-    "name": "music-player",
+    "name": "mp3-player",
     "version": "1.0.0",
     "main": "build/electron/main.js",
     "scripts": {

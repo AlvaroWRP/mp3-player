@@ -30,8 +30,8 @@ export function App() {
     }, [songs.length, enableShuffle, isUsingShuffle, activeTab]);
 
     return (
-        <div>
-            <div>
+        <div className="h-screen w-screen overflow-hidden flex flex-col bg-neutral-900 text-neutral-100">
+            <div className="flex flex-1 overflow-hidden">
                 <SideArea
                     activeTab={activeTab}
                     onLibraryClick={() => {
@@ -48,7 +48,10 @@ export function App() {
                     onSongSelect={(index) => {
                         selectSong(index);
                     }}
-                    onShuffle={enableShuffle}
+                    onShuffle={() => {
+                        enableShuffle();
+                        setActiveTab('shuffle');
+                    }}
                     onSelectFolder={selectFolder}
                 ></MainArea>
             </div>
