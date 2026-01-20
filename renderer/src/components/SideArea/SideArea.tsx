@@ -3,7 +3,7 @@ import type { SideAreaProps } from '../../types/types';
 export function SideArea({ onLibraryClick, onShuffleClick, activeTab }: SideAreaProps) {
     return (
         <aside className="w-1/4 min-w-[220px] max-w-[320px] bg-neutral-800 border-r border-neutral-700 p-6 flex flex-col gap-6">
-            <h1 className="text-xl font-semibold tracking-wide">Music Player</h1>
+            <h1 className="text-xl font-semibold tracking-wide">MP3 Player</h1>
             <nav>
                 <ul className="space-y-2">
                     <li>

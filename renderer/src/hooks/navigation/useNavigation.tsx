@@ -13,27 +13,29 @@ export function useNavigation(songs: Song[]) {
         [songs, shuffledSongs, songIndex, shuffledIndex, isUsingShuffle],
     );
 
-    const next = () => {
+    const currentSongIndex = isUsingShuffle ? shuffledIndex : songIndex;
+
+    const skipSong = (button: 'previous' | 'next') => {
         if (!songs.length) return;
 
-        if (isUsingShuffle) {
-            setShuffledIndex((i) => (i + 1) % shuffledSongs.length);
+        if (button === 'previous') {
+            if (isUsingShuffle) {
+                setShuffledIndex((i) => (i - 1 + shuffledSongs.length) % shuffledSongs.length);
+            } else {
+                setSongIndex((i) => (i - 1 + songs.length) % songs.length);
+            }
         } else {
-            setSongIndex((i) => (i + 1) % songs.length);
-        }
-    };
-
-    const prev = () => {
-        if (!songs.length) return;
-
-        if (isUsingShuffle) {
-            setShuffledIndex((i) => (i - 1 + shuffledSongs.length) % shuffledSongs.length);
-        } else {
-            setSongIndex((i) => (i - 1 + songs.length) % songs.length);
+            if (isUsingShuffle) {
+                setShuffledIndex((i) => (i + 1) % shuffledSongs.length);
+            } else {
+                setSongIndex((i) => (i + 1) % songs.length);
+            }
         }
     };
 
     const enableShuffle = () => {
+        if (!songs.length) return;
+
         setShuffledSongs(shuffleArray(songs));
         setShuffledIndex(0);
         setIsUsingShuffle(true);
@@ -43,20 +45,22 @@ export function useNavigation(songs: Song[]) {
         setIsUsingShuffle(false);
     };
 
-    const selectSong = (index: number) => {
-        if (isUsingShuffle) {
+    const selectSong = (index: number, source: 'library' | 'shuffle') => {
+        if (source === 'shuffle') {
+            setIsUsingShuffle(true);
             setShuffledIndex(index);
         } else {
+            setIsUsingShuffle(false);
             setSongIndex(index);
         }
     };
 
     return {
         currentSong,
+        currentSongIndex,
         shuffledSongs,
         isUsingShuffle,
-        next,
-        prev,
+        skipSong,
         enableShuffle,
         disableShuffle,
         selectSong,

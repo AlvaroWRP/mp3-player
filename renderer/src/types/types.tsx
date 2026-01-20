@@ -9,7 +9,8 @@ export type MainAreaProps = {
     activeTab: 'library' | 'shuffle';
     songs: Song[];
     shuffledSongs: Song[];
-    onSongSelect: (index: number) => void;
+    currentSongIndex: number;
+    onSongSelect: (index: number, source: 'library' | 'shuffle') => void;
     onShuffle: () => void;
     onSelectFolder: () => void;
 };

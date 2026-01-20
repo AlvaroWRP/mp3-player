@@ -6,8 +6,8 @@ export function useAudioEvents(audioRef: React.RefObject<HTMLAudioElement>, onEn
 
     useEffect(() => {
         if (!audioRef.current) return;
-        const audio = audioRef.current;
 
+        const audio = audioRef.current;
         const onTime = () => setCurrentTime(audio.currentTime);
         const onMeta = () => setDuration(audio.duration);
 

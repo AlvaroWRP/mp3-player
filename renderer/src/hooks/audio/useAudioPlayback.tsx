@@ -13,6 +13,7 @@ export function useAudioPlayback({ audioRef, song }: UseAudioPlaybackArgs) {
 
         const loadAndPlay = async () => {
             const result = await window.electronAPI.getSongInfo(song.path);
+
             if (!result || cancelled) return;
 
             const { buffer, mime, cover } = result;
@@ -43,7 +44,7 @@ export function useAudioPlayback({ audioRef, song }: UseAudioPlaybackArgs) {
     };
 
     const pause = () => {
-        audioRef.current?.pause();
+        audioRef.current.pause();
         setIsPlaying(false);
     };
 

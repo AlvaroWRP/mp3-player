@@ -23,8 +23,7 @@ export function PlayerArea({ audioPlayer }: PlayerAreaProps) {
         isMuted,
         play,
         pause,
-        next,
-        prev,
+        skipSong,
         setVolume,
         toggleMute,
         seek,
@@ -79,19 +78,21 @@ export function PlayerArea({ audioPlayer }: PlayerAreaProps) {
                 <span className="w-10 tabular-nums">{formatTime(duration)}</span>
             </div>
             <div className="relative flex items-center h-12">
-                <div className="flex items-center gap-3 min-w-0 w-[280px]">
+                <div className="flex items-center gap-3 min-w-0 w-[580px]">
                     <img
                         src={coverUrl ?? defaultCover}
                         className="w-12 h-12 rounded-md object-cover shrink-0 transition-transform duration-200 hover:scale-105"
                         draggable={false}
                     />
                     <span className="font-medium truncate block">
-                        {currentSong?.name.replace('.mp3', '') ?? 'No song selected'}
+                        {currentSong.name.replace('.mp3', '') ?? 'No song selected'}
                     </span>
                 </div>
                 <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-4">
                     <button
-                        onClick={prev}
+                        onClick={() => {
+                            skipSong('previous');
+                        }}
                         className="p-2 rounded-full transition-all duration-150 ease-out hover:bg-neutral-700 hover:scale-110 active:scale-95"
                     >
                         <FontAwesomeIcon icon={faBackward} />
@@ -103,7 +104,9 @@ export function PlayerArea({ audioPlayer }: PlayerAreaProps) {
                         <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
                     </button>
                     <button
-                        onClick={next}
+                        onClick={() => {
+                            skipSong('next');
+                        }}
                         className="p-2 rounded-full transition-all duration-150 ease-out hover:bg-neutral-700 hover:scale-110 active:scale-95"
                     >
                         <FontAwesomeIcon icon={faForward} />

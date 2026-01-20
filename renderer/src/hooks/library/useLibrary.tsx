@@ -9,6 +9,7 @@ export function useLibrary() {
 
     const selectFolder = async () => {
         const files = await window.electronAPI.selectFolder();
+
         if (!files.length) return;
 
         const sorted = [...files].sort((a, b) =>

@@ -6,15 +6,17 @@ export function MainArea({
     activeTab,
     songs,
     shuffledSongs,
+    currentSongIndex,
     onSongSelect,
     onShuffle,
     onSelectFolder,
 }: MainAreaProps) {
     const songsList = activeTab === 'shuffle' && shuffledSongs.length ? shuffledSongs : songs;
+    const isShuffleEmpty = activeTab === 'shuffle' && shuffledSongs.length === 0;
 
     return (
-        <main className="flex-1 overflow-y-auto p-6">
-            <header className="flex items-center justify-between mb-6">
+        <main className="flex flex-col flex-1 overflow-y-auto px-6">
+            <header className="sticky top-0 z-10 flex items-center justify-between bg-neutral-900/90 backdrop-blur py-4 mb-6">
                 <h2 className="text-lg font-semibold">
                     {activeTab === 'shuffle' ? 'Shuffled' : 'Library'}
                 </h2>
@@ -35,20 +37,41 @@ export function MainArea({
                     </button>
                 </div>
             </header>
-            <ul className="space-y-2">
-                {songsList.map((song, index) => (
-                    <li
-                        key={song.path}
-                        onClick={() => {
-                            onSongSelect(index);
-                        }}
-                        className="p-3 rounded-md hover:bg-neutral-800 cursor-pointer transition hover:translate-x-1"
-                    >
-                        <strong className="block">{song.name.replace('.mp3', '')}</strong>
-                        <small className="text-neutral-400 truncate block">{song.path}</small>
-                    </li>
-                ))}
-            </ul>
+            {isShuffleEmpty ? (
+                <div className="flex flex-1 items-center justify-center text-neutral-400">
+                    <div className="text-center">
+                        <p className="text-lg font-medium">No shuffled songs yet</p>
+                        <p className="text-sm mt-1">
+                            Click <span className="text-white">Shuffle</span> to generate a shuffled
+                            list
+                        </p>
+                    </div>
+                </div>
+            ) : (
+                <ul className="space-y-2 pb-2">
+                    {songsList.map((song, index) => (
+                        <li
+                            key={song.path}
+                            onClick={() => {
+                                onSongSelect(index, activeTab);
+                            }}
+                            className={[
+                                'p-3 rounded-md cursor-pointer transition hover:bg-neutral-800 hover:translate-x-1',
+                                index === currentSongIndex
+                                    ? 'bg-neutral-700/70 shadow-[inset_0_0_0_1px_rgba(59,130,246,0.6)]'
+                                    : 'bg-transparent',
+                            ].join(' ')}
+                        >
+                            <strong
+                                className={`block ${index === currentSongIndex ? 'text-blue-400' : ''}`}
+                            >
+                                {song.name.replace('.mp3', '')}
+                            </strong>
+                            <small className="text-neutral-400 truncate block">{song.path}</small>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </main>
     );
 }

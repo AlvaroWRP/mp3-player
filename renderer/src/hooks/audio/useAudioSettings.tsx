@@ -5,8 +5,10 @@ export function useAudioSettings(audioRef: React.RefObject<HTMLAudioElement>) {
         const v = Number(localStorage.getItem('volume'));
         return Number.isFinite(v) ? v : 100;
     });
+
     const [isMuted, setIsMuted] = useState(false);
     const lastVolumeRef = useRef(volume);
+
     const setVolumeFix = (v: number) => {
         setVolume(v);
 
@@ -17,6 +19,7 @@ export function useAudioSettings(audioRef: React.RefObject<HTMLAudioElement>) {
             setIsMuted(false);
         }
     };
+
     const toggleMute = () => {
         setIsMuted((prev) => {
             if (!prev) {

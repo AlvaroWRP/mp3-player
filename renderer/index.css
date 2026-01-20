@@ -2,6 +2,8 @@
 
 * {
     user-select: none;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(115, 115, 115, 0.5) transparent;
 }
 
 :focus {
@@ -9,8 +11,8 @@
 }
 
 :focus-visible {
-    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.6);
-    border-radius: 6px;
+    outline: 2px solid rgba(99, 102, 241, 0.6);
+    outline-offset: 2px;
 }
 
 .progress-bar-style {

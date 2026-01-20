@@ -9,7 +9,7 @@ import '../index.css';
 export function App() {
     const audioPlayer = useAudioPlayer();
 
-    const { songs, shuffledSongs, enableShuffle, selectSong, selectFolder, isUsingShuffle } =
+    const { songs, currentSongIndex, shuffledSongs, enableShuffle, selectSong, selectFolder } =
         audioPlayer;
 
     const [activeTab, setActiveTab] = useState<ActiveTab>(() => {
@@ -20,14 +20,6 @@ export function App() {
     useEffect(() => {
         localStorage.setItem('activeTab', activeTab);
     }, [activeTab]);
-
-    useEffect(() => {
-        if (!songs.length) return;
-
-        if (activeTab === 'shuffle' && !isUsingShuffle) {
-            enableShuffle();
-        }
-    }, [songs.length, enableShuffle, isUsingShuffle, activeTab]);
 
     return (
         <div className="h-screen w-screen overflow-hidden flex flex-col bg-neutral-900 text-neutral-100">
@@ -45,8 +37,9 @@ export function App() {
                     activeTab={activeTab}
                     songs={songs}
                     shuffledSongs={shuffledSongs}
-                    onSongSelect={(index) => {
-                        selectSong(index);
+                    currentSongIndex={currentSongIndex}
+                    onSongSelect={(index, source) => {
+                        selectSong(index, source);
                     }}
                     onShuffle={() => {
                         enableShuffle();
