@@ -19,5 +19,6 @@ export function useLibrary() {
         setSongs(sorted);
         localStorage.setItem('songs', JSON.stringify(sorted));
     };
+
     return { songs, setSongs, selectFolder };
 }

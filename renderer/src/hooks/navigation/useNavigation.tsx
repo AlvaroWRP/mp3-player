@@ -1,12 +1,27 @@
-import { useMemo, useState } from 'react';
-import type { Song } from '../../types/types';
+import { useEffect, useMemo, useState } from 'react';
+import type { Song, PersistedStates } from '../../types/types';
 import { shuffleArray } from './useShuffle';
 
 export function useNavigation(songs: Song[]) {
-    const [songIndex, setSongIndex] = useState(0);
-    const [shuffledSongs, setShuffledSongs] = useState<Song[]>([]);
-    const [shuffledIndex, setShuffledIndex] = useState(0);
-    const [isUsingShuffle, setIsUsingShuffle] = useState(false);
+    const persistedStates = useMemo<PersistedStates | null>(() => {
+        const raw = localStorage.getItem('persistedStates');
+        return raw ? JSON.parse(raw) : null;
+    }, []);
+
+    const [songIndex, setSongIndex] = useState(() => persistedStates?.songIndex ?? 0);
+    const [shuffledIndex, setShuffledIndex] = useState(() => persistedStates?.shuffledIndex ?? 0);
+
+    const [shuffledSongs, setShuffledSongs] = useState<Song[]>(() => {
+        if (!persistedStates?.shuffledOrder.length) return [];
+
+        return persistedStates.shuffledOrder
+            .map((path) => songs.find((s) => s.path === path))
+            .filter(Boolean) as Song[];
+    });
+
+    const [isUsingShuffle, setIsUsingShuffle] = useState(
+        () => persistedStates?.isUsingShuffle ?? false,
+    );
 
     const currentSong = useMemo(
         () => (isUsingShuffle ? shuffledSongs[shuffledIndex] : songs[songIndex]),
@@ -14,6 +29,19 @@ export function useNavigation(songs: Song[]) {
     );
 
     const currentSongIndex = isUsingShuffle ? shuffledIndex : songIndex;
+
+    useEffect(() => {
+        if (!songs.length) return;
+
+        const state = {
+            songIndex,
+            shuffledIndex,
+            isUsingShuffle,
+            shuffledOrder: shuffledSongs.map((s) => s.path),
+        };
+
+        localStorage.setItem('persistedStates', JSON.stringify(state));
+    }, [songIndex, shuffledIndex, isUsingShuffle, shuffledSongs, songs]);
 
     const skipSong = (button: 'previous' | 'next') => {
         if (!songs.length) return;

@@ -31,3 +31,10 @@ export type UseAudioPlaybackArgs = {
 };
 
 export type ActiveTab = 'library' | 'shuffle';
+
+export type PersistedStates = {
+    songIndex: number;
+    shuffledIndex: number;
+    isUsingShuffle: boolean;
+    shuffledOrder: string[];
+};
