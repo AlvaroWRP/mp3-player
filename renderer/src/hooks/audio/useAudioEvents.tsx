@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type RefObject } from 'react';
 
-export function useAudioEvents(audioRef: React.RefObject<HTMLAudioElement>, onEnded: () => void) {
+export function useAudioEvents(audioRef: RefObject<HTMLAudioElement>, onEnded: () => void) {
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
 

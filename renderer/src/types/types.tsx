@@ -1,36 +1,90 @@
+import type { ReactNode, RefObject } from 'react';
 import type { useAudioPlayer } from '../hooks/useAudioPlayer';
 
-export type Song = {
+export type Song = Readonly<{
     name: string;
     path: string;
+}>;
+
+export type ActiveTab = 'library' | 'shuffle';
+
+type BaseMainAreaProps = {
+    activeTab: ActiveTab;
+    songs: Song[];
 };
 
-export type MainAreaProps = {
-    activeTab: 'library' | 'shuffle';
-    songs: Song[];
+export type MainAreaProps = BaseMainAreaProps & {
     shuffledSongs: Song[];
     currentSongIndex: number;
-    onSongSelect: (index: number, source: 'library' | 'shuffle') => void;
+    onSongSelect: (index: number, source: ActiveTab) => void;
     onShuffle: () => void;
     onSelectFolder: () => void;
+};
+
+export type HeaderProps = Pick<
+    MainAreaProps,
+    'activeTab' | 'songs' | 'onShuffle' | 'onSelectFolder'
+>;
+
+export type EmptyStateProps = {
+    title: string;
+    subtitle: ReactNode;
+};
+
+export type SongsRendererProps = BaseMainAreaProps & {
+    shuffledSongs: Song[];
+    currentSongIndex: number;
+    onSongSelect: (index: number, source: ActiveTab) => void;
 };
 
 export type PlayerAreaProps = {
     audioPlayer: ReturnType<typeof useAudioPlayer>;
 };
 
+export type ProgressBarProps = {
+    currentTime: number;
+    duration: number;
+    isPlaying: boolean;
+    seek: (percentage: number, duration: number) => void;
+};
+
+export type SongInfoProps = {
+    coverUrl: string | null;
+    currentSong: Song | null;
+};
+
+export type ButtonsProps = {
+    currentSong: Song | null;
+    isPlaying: boolean;
+    play: () => void;
+    pause: () => void;
+    skipSong: (button: 'previous' | 'next') => void;
+};
+
+export type VolumeProps = {
+    volume: number;
+    isMuted: boolean;
+    setVolume: (volume: number) => void;
+    toggleMute: () => void;
+};
+
 export type SideAreaProps = {
-    activeTab: 'library' | 'shuffle';
+    activeTab: ActiveTab;
     onLibraryClick: () => void;
     onShuffleClick: () => void;
 };
 
-export type UseAudioPlaybackArgs = {
-    audioRef: React.RefObject<HTMLAudioElement>;
-    song: Song | undefined;
+export type TabItemProps = {
+    onClick: () => void;
+    isActive: boolean;
+    colorClass: string;
+    tabName: string;
 };
 
-export type ActiveTab = 'library' | 'shuffle';
+export type UseAudioPlaybackArgs = {
+    audioRef: RefObject<HTMLAudioElement>;
+    song?: Song;
+};
 
 export type PersistedStates = {
     songIndex: number;

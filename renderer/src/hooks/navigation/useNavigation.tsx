@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import type { Song, PersistedStates } from '../../types/types';
 import { shuffleArray } from './useShuffle';
+import type { Song, PersistedStates, ActiveTab } from '../../types/types';
 
 export function useNavigation(songs: Song[]) {
     const persistedStates = useMemo<PersistedStates | null>(() => {
@@ -73,7 +73,7 @@ export function useNavigation(songs: Song[]) {
         setIsUsingShuffle(false);
     };
 
-    const selectSong = (index: number, source: 'library' | 'shuffle') => {
+    const selectSong = (index: number, source: ActiveTab) => {
         if (source === 'shuffle') {
             setIsUsingShuffle(true);
             setShuffledIndex(index);

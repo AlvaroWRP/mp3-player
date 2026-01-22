@@ -1,8 +1,8 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, type RefObject } from 'react';
 
 const defaultVolume = 50;
 
-export function useAudioSettings(audioRef: React.RefObject<HTMLAudioElement>) {
+export function useAudioSettings(audioRef: RefObject<HTMLAudioElement>) {
     const [volume, setVolume] = useState(() => {
         const v = Number(localStorage.getItem('volume'));
         return Number.isFinite(v) ? v : defaultVolume;
