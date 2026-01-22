@@ -4,8 +4,6 @@ import path from 'path';
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import { parseFile } from 'music-metadata';
 
-const appRoot = path.resolve(__dirname, '../../../');
-
 let mainWindow: BrowserWindow;
 
 function loadIndex() {
@@ -15,7 +13,7 @@ function loadIndex() {
         mainWindow.loadURL('http://localhost:5173');
         mainWindow.webContents.openDevTools();
     } else {
-        mainWindow.loadFile(path.join(app.getAppPath(), 'renderer/dist/index.html'));
+        mainWindow.loadFile(path.join(__dirname, '..', '..', 'renderer', 'dist', 'index.html'));
     }
 }
 
@@ -23,13 +21,17 @@ const createMainWindow = () => {
     mainWindow = new BrowserWindow({
         width: 1920,
         height: 1080,
-        icon: path.join(__dirname, appRoot, 'assets/images/icon.ico'),
+        icon: path.join(__dirname, '..', '..', 'assets', 'images', 'icon.ico'),
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
         },
     });
 
     mainWindow.menuBarVisible = false;
+
+    mainWindow.webContents.setWindowOpenHandler(() => {
+        return { action: 'deny' };
+    });
 
     loadIndex();
 };

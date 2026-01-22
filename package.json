@@ -2,22 +2,47 @@
     "name": "mp3-player",
     "version": "1.0.0",
     "main": "build/electron/main.js",
+    "description": "MP3 player",
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "private": true,
     "scripts": {
         "prettier": "npx prettier . --write",
         "sort": "npx eslint . --ext .ts,.tsx,.js,.jsx --fix",
         "clean": "rimraf build",
         "build": "npm run clean && tsc -b",
-        "dev": "npm run build && electron ."
+        "dev": "npm run build && electron .",
+        "dist": "npm run build && electron-builder"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "description": "",
+    "build": {
+        "appId": "com.yourname.mp3player",
+        "productName": "MP3 Player",
+        "directories": {
+            "output": "release"
+        },
+        "files": [
+            "build/**/*",
+            "renderer/dist/**/*",
+            "assets/**/*"
+        ],
+        "win": {
+            "icon": "renderer/src/assets/images/icon.ico",
+            "target": "nsis"
+        },
+        "mac": {
+            "target": "dmg"
+        },
+        "linux": {
+            "target": "AppImage"
+        }
+    },
     "devDependencies": {
         "@eslint/js": "^9.39.2",
         "@types/node": "^25.0.7",
         "@typescript-eslint/parser": "^8.53.0",
         "electron": "^39.2.7",
+        "electron-builder": "^26.4.0",
         "eslint": "^9.39.2",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-import": "^2.32.0",
