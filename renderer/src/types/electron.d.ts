@@ -5,5 +5,7 @@ interface Window {
         getSongInfo: (
             filePath: string,
         ) => Promise<{ buffer: ArrayBuffer; mime: string; cover: string | null }>;
+
+        setWindowTitle: (songName: string) => void;
     };
 }

@@ -31,7 +31,7 @@ export function SongsRenderer({
                     }}
                     key={song.path}
                     onClick={() => {
-                        onSongSelect(index, activeTab);
+                        onSongSelect(song.path, activeTab);
                     }}
                     className={`p-3 rounded-md cursor-pointer transition hover:bg-neutral-800 hover:translate-x-1 ${
                         index === currentSongIndex

@@ -83,6 +83,14 @@ export function useNavigation(songs: Song[]) {
         }
     };
 
+    const selectSongByPath = (songPath: string, source: ActiveTab) => {
+        const list = source === 'shuffle' ? shuffledSongs : songs;
+        const index = list.findIndex((song) => song.path === songPath);
+
+        if (index === -1) return;
+        selectSong(index, source);
+    };
+
     return {
         currentSong,
         currentSongIndex,
@@ -91,6 +99,6 @@ export function useNavigation(songs: Song[]) {
         skipSong,
         enableShuffle,
         disableShuffle,
-        selectSong,
+        selectSongByPath,
     };
 }

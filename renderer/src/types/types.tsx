@@ -16,25 +16,29 @@ type BaseMainAreaProps = {
 export type MainAreaProps = BaseMainAreaProps & {
     shuffledSongs: Song[];
     currentSongIndex: number;
-    onSongSelect: (index: number, source: ActiveTab) => void;
+    onSongSelect: (songPath: string, source: ActiveTab) => void;
     onShuffle: () => void;
     onSelectFolder: () => void;
 };
 
-export type HeaderProps = Pick<
-    MainAreaProps,
-    'activeTab' | 'songs' | 'onShuffle' | 'onSelectFolder'
->;
+export type HeaderProps = BaseMainAreaProps & {
+    searchQuery: string;
+    onSearchChange: (value: string) => void;
+    onShuffle: () => void;
+    onSelectFolder: () => void;
+};
 
 export type EmptyStateProps = {
     title: string;
     subtitle: ReactNode;
 };
 
+export type SearchBarProps = Pick<HeaderProps, 'searchQuery' | 'onSearchChange'>;
+
 export type SongsRendererProps = BaseMainAreaProps & {
     shuffledSongs: Song[];
     currentSongIndex: number;
-    onSongSelect: (index: number, source: ActiveTab) => void;
+    onSongSelect: (songPath: string, source: ActiveTab) => void;
 };
 
 export type PlayerAreaProps = {

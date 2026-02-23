@@ -82,6 +82,10 @@ ipcMain.handle('get-song-info', async (_, filePath: string) => {
     }
 });
 
+ipcMain.on('set-window-title', (_, songName: string) => {
+    mainWindow.setTitle(`MP3 Player - ${songName}`);
+});
+
 app.whenReady().then(() => {
     createMainWindow();
 

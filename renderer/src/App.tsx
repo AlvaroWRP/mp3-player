@@ -9,8 +9,14 @@ import '../index.css';
 export function App() {
     const audioPlayer = useAudioPlayer();
 
-    const { songs, currentSongIndex, shuffledSongs, enableShuffle, selectSong, selectFolder } =
-        audioPlayer;
+    const {
+        songs,
+        currentSongIndex,
+        shuffledSongs,
+        enableShuffle,
+        selectSongByPath,
+        selectFolder,
+    } = audioPlayer;
 
     const [activeTab, setActiveTab] = useState<ActiveTab>(() => {
         const saved = localStorage.getItem('activeTab');
@@ -38,9 +44,7 @@ export function App() {
                     songs={songs}
                     shuffledSongs={shuffledSongs}
                     currentSongIndex={currentSongIndex}
-                    onSongSelect={(index, source) => {
-                        selectSong(index, source);
-                    }}
+                    onSongSelect={selectSongByPath}
                     onShuffle={() => {
                         enableShuffle();
                         setActiveTab('shuffle');
