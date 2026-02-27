@@ -55,11 +55,26 @@ export type ProgressBarProps = {
 export type SongInfoProps = {
     coverUrl: string | null;
     currentSong: Song | null;
+    onClick: () => void;
+};
+
+export type SongInfoExpandedProps = {
+    currentSong: Song | null;
+    coverUrl: string | null;
+    isPlaying: boolean;
+    currentTime: number;
+    duration: number;
+    play: () => void;
+    pause: () => void;
+    skipSong: (button: 'previous' | 'next') => void;
+    seek: (percentage: number, duration: number) => void;
+    onClose: () => void;
 };
 
 export type ButtonsProps = {
     currentSong: Song | null;
     isPlaying: boolean;
+    size: 'small' | 'large';
     play: () => void;
     pause: () => void;
     skipSong: (button: 'previous' | 'next') => void;
