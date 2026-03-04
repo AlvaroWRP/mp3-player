@@ -69,6 +69,10 @@ export type SongInfoExpandedProps = {
     skipSong: (button: 'previous' | 'next') => void;
     seek: (percentage: number, duration: number) => void;
     onClose: () => void;
+    volume: number;
+    isMuted: boolean;
+    setVolume: (volume: number) => void;
+    toggleMute: () => void;
 };
 
 export type ButtonsProps = {
@@ -83,6 +87,7 @@ export type ButtonsProps = {
 export type VolumeProps = {
     volume: number;
     isMuted: boolean;
+    size?: 'small' | 'large';
     setVolume: (volume: number) => void;
     toggleMute: () => void;
 };

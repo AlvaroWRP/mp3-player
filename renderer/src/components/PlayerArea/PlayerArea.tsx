@@ -39,7 +39,11 @@ export function PlayerArea({ audioPlayer }: PlayerAreaProps) {
                     skipSong={skipSong}
                     seek={seek}
                     onClose={() => setIsExpanded(false)}
-                ></SongInfoExpanded>
+                    volume={volume}
+                    isMuted={isMuted}
+                    setVolume={setVolume}
+                    toggleMute={toggleMute}
+                />
             )}
             <footer className="h-24 bg-neutral-800 border-t border-neutral-700 px-6 flex flex-col justify-center gap-3 shadow-[0_-4px_12px_rgba(0,0,0,0.4)]">
                 <ProgressBar
@@ -47,13 +51,13 @@ export function PlayerArea({ audioPlayer }: PlayerAreaProps) {
                     seek={seek}
                     duration={duration}
                     isPlaying={isPlaying}
-                ></ProgressBar>
-                <div className="relative flex items-center h-12">
+                />
+                <div className="relative flex items-center justify-between h-12">
                     <SongInfo
                         coverUrl={coverUrl}
                         currentSong={currentSong}
                         onClick={() => setIsExpanded(true)}
-                    ></SongInfo>
+                    />
                     <div className="absolute left-1/2 -translate-x-1/2">
                         <Buttons
                             size="small"
@@ -62,14 +66,14 @@ export function PlayerArea({ audioPlayer }: PlayerAreaProps) {
                             isPlaying={isPlaying}
                             play={play}
                             pause={pause}
-                        ></Buttons>
+                        />
                     </div>
                     <Volume
                         toggleMute={toggleMute}
                         isMuted={isMuted}
                         setVolume={setVolume}
                         volume={volume}
-                    ></Volume>
+                    />
                 </div>
             </footer>
         </>

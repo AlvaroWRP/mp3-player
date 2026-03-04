@@ -9,7 +9,7 @@ export function SongInfo({ coverUrl, currentSong, onClick }: SongInfoProps) {
         >
             <img
                 src={coverUrl ?? defaultCover}
-                className="w-12 h-12 rounded-md object-cover shrink-0 transition-transform duration-200 group-hover:scale-110"
+                className="w-12 h-12 rounded-lg object-cover shrink-0 shadow-md transition-all duration-300 ease-out group-hover:scale-105 group-hover:shadow-lg group-hover:brightness-110"
                 draggable={false}
             />
             <span className="font-medium truncate block group-hover:text-blue-400 transition-colors">
