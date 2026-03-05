@@ -23,6 +23,8 @@ export function SongInfoExpanded({
     setVolume,
     toggleMute,
 }: SongInfoExpandedProps) {
+    const isDefaultCover = !coverUrl;
+
     useEffect(() => {
         document.body.style.overflow = 'hidden';
 
@@ -63,18 +65,24 @@ export function SongInfoExpanded({
                 </div>
             </div>
             <div className="relative w-80 h-80 mb-10 group">
-                <div
-                    className="absolute inset-0 rounded-3xl opacity-60 blur-2xl scale-110 transition-all duration-500 group-hover:scale-115"
-                    style={{
-                        backgroundImage: `url(${coverUrl ?? defaultCover})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                    }}
-                ></div>
-                <div className="absolute inset-0 rounded-3xl bg-black/40"></div>
+                {!isDefaultCover && (
+                    <>
+                        <div
+                            className="absolute inset-0 rounded-3xl opacity-60 blur-2xl scale-110 transition-all duration-500 group-hover:scale-115"
+                            style={{
+                                backgroundImage: `url(${coverUrl})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                            }}
+                        />
+                        <div className="absolute inset-0 rounded-3xl bg-black/40"></div>
+                    </>
+                )}
                 <img
                     src={coverUrl ?? defaultCover}
-                    className="relative w-full h-full object-cover rounded-3xl shadow-2xl transition-all duration-500 ease-out group-hover:scale-105"
+                    className={`relative w-full h-full rounded-3xl shadow-2xl transition-all duration-500 ease-out group-hover:scale-105 ${
+                        isDefaultCover ? 'object-contain' : 'object-cover'
+                    }`}
                     draggable={false}
                 />
             </div>

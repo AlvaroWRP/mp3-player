@@ -21,6 +21,8 @@ const createMainWindow = () => {
     mainWindow = new BrowserWindow({
         width: 1920,
         height: 1080,
+        minWidth: 800,
+        minHeight: 600,
         icon: path.join(__dirname, '..', '..', 'assets', 'images', 'icon.ico'),
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
