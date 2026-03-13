@@ -2,13 +2,13 @@ import fs from 'fs';
 import path from 'path';
 
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import { autoUpdater } from 'electron-updater';
 import { parseFile } from 'music-metadata';
 
 let mainWindow: BrowserWindow;
+const isDev = !app.isPackaged;
 
 function loadIndex() {
-    const isDev = !app.isPackaged;
-
     if (isDev) {
         mainWindow.loadURL('http://localhost:5173');
         mainWindow.webContents.openDevTools();
@@ -88,8 +88,25 @@ ipcMain.on('set-window-title', (_, songName: string) => {
     mainWindow.setTitle(`MP3 Player - ${songName}`);
 });
 
-app.whenReady().then(() => {
+autoUpdater.on('update-available', () => {
+    console.log('Update available');
+});
+
+autoUpdater.on('update-downloaded', () => {
+    console.log('Update downloaded');
+    autoUpdater.quitAndInstall();
+});
+
+app.whenReady().then(async () => {
     createMainWindow();
+
+    if (!isDev) {
+        try {
+            await autoUpdater.checkForUpdatesAndNotify();
+        } catch (error) {
+            console.trace(error);
+        }
+    }
 
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {

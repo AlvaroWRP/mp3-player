@@ -1,10 +1,10 @@
 {
     "name": "mp3-player",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "main": "build/electron/main.js",
     "description": "MP3 player",
     "keywords": [],
-    "author": "",
+    "author": "AlvaroWRP",
     "license": "ISC",
     "private": true,
     "scripts": {
@@ -24,8 +24,13 @@
         "files": [
             "build/**/*",
             "renderer/dist/**/*",
-            "assets/**/*"
+            "renderer/src/assets/**/*"
         ],
+        "publish": {
+            "provider": "github",
+            "owner": "AlvaroWRP",
+            "repo": "mp3-player"
+        },
         "win": {
             "icon": "renderer/src/assets/images/icon.ico",
             "target": "nsis"
@@ -54,6 +59,7 @@
         "typescript-eslint": "^8.53.0"
     },
     "dependencies": {
+        "electron-updater": "^6.8.3",
         "music-metadata": "^11.10.5"
     }
 }
