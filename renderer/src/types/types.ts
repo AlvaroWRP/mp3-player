@@ -116,3 +116,9 @@ export type PersistedStates = {
     isUsingShuffle: boolean;
     shuffledOrder: string[];
 };
+
+export type OverlayWindowData = {
+    title: string;
+    cover: string | null;
+    isPlaying: boolean;
+};

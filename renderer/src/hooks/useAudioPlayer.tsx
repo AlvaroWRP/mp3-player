@@ -23,5 +23,31 @@ export function useAudioPlayer() {
     const audioEvents = useAudioEvents(audioRef, handleEnded);
     const audioSettings = useAudioSettings(audioRef);
 
-    return { songs, selectFolder, ...navigation, ...playback, ...audioEvents, ...audioSettings };
+    const togglePlay = useCallback(() => {
+        if (playback.isPlaying) {
+            playback.pause();
+        } else {
+            playback.play();
+        }
+    }, [playback]);
+
+    const playNext = useCallback(() => {
+        navigation.skipSong('next');
+    }, [navigation]);
+
+    const playPrevious = useCallback(() => {
+        navigation.skipSong('previous');
+    }, [navigation]);
+
+    return {
+        songs,
+        selectFolder,
+        togglePlay,
+        playNext,
+        playPrevious,
+        ...navigation,
+        ...playback,
+        ...audioEvents,
+        ...audioSettings,
+    };
 }

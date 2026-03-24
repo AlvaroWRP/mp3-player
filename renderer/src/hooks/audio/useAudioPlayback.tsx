@@ -4,8 +4,10 @@ import type { UseAudioPlaybackArgs } from '../../types/types';
 export function useAudioPlayback({ audioRef, song }: UseAudioPlaybackArgs) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [coverUrl, setCoverUrl] = useState<string | null>(null);
+    const isOverlay = window.location.hash === '#/overlay';
 
     useEffect(() => {
+        if (isOverlay) return;
         if (!song || !audioRef.current) return;
 
         let cancelled = false;
@@ -38,16 +40,16 @@ export function useAudioPlayback({ audioRef, song }: UseAudioPlaybackArgs) {
             cancelled = true;
             if (objectUrl) URL.revokeObjectURL(objectUrl);
         };
-    }, [song, audioRef]);
+    }, [song, audioRef, isOverlay]);
 
     const play = async () => {
-        if (!audioRef.current) return;
+        if (isOverlay || !audioRef.current) return;
         await audioRef.current.play();
         setIsPlaying(true);
     };
 
     const pause = () => {
-        if (!audioRef.current) return;
+        if (isOverlay || !audioRef.current) return;
         audioRef.current.pause();
         setIsPlaying(false);
     };
