@@ -1,6 +1,6 @@
 {
     "name": "mp3-player",
-    "version": "1.3.0",
+    "version": "1.3.1",
     "main": "build/electron/main.js",
     "description": "MP3 player",
     "keywords": [],
@@ -59,6 +59,7 @@
         "typescript-eslint": "^8.53.0"
     },
     "dependencies": {
+        "electron-log": "^5.4.3",
         "electron-updater": "^6.8.3",
         "music-metadata": "^11.10.5"
     }

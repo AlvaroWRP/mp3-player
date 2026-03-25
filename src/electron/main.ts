@@ -2,8 +2,12 @@ import fs from 'fs';
 import path from 'path';
 
 import { app, BrowserWindow, ipcMain, dialog, globalShortcut, screen } from 'electron';
+import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import { parseFile } from 'music-metadata';
+
+autoUpdater.logger = log;
+log.transports.file.level = 'info';
 
 let mainWindow: BrowserWindow;
 let overlayWindow: BrowserWindow;
@@ -171,13 +175,42 @@ ipcMain.on('show-overlay-window', (_, data) => {
     }, 3000);
 });
 
-autoUpdater.on('update-available', () => {
-    console.log('Update available');
+autoUpdater.on('checking-for-update', () => {
+    log.info('Checking for updates...');
 });
 
-autoUpdater.on('update-downloaded', () => {
-    console.log('Update downloaded');
-    autoUpdater.quitAndInstall();
+autoUpdater.on('update-not-available', () => {
+    log.info('No updates available');
+});
+
+autoUpdater.on('update-available', async () => {
+    const result = await dialog.showMessageBox(mainWindow, {
+        type: 'info',
+        title: 'Update available',
+        message: 'A new version is available. Do you want to update now?',
+        buttons: ['Yes', 'No'],
+    });
+
+    if (result.response === 0) {
+        autoUpdater.downloadUpdate();
+    }
+});
+
+autoUpdater.on('update-downloaded', async () => {
+    const result = await dialog.showMessageBox(mainWindow, {
+        type: 'info',
+        title: 'Update ready',
+        message: 'Update downloaded. Do you want to restart the app to install it?',
+        buttons: ['Restart', 'Later'],
+    });
+
+    if (result.response === 0) {
+        autoUpdater.quitAndInstall();
+    }
+});
+
+autoUpdater.on('error', (error) => {
+    log.error('Updater error:', error);
 });
 
 app.whenReady().then(async () => {
@@ -186,7 +219,7 @@ app.whenReady().then(async () => {
 
     if (!isDev) {
         try {
-            await autoUpdater.checkForUpdatesAndNotify();
+            await autoUpdater.checkForUpdates();
         } catch (error) {
             console.trace(error);
         }
